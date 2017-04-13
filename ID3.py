@@ -159,9 +159,12 @@ def evaluate(node, example):
       return node.get_label()
 
   # If the node has children, then find the one which matches our example data and evaluate using that node
-  for child in node.get_children():
-      if example[node.get_name()]==child.label: # If our example value matches the one of this child...
-          return evaluate(child, example) # Recurse with that child
+  children=node.get_children()
+  for child in children:
+	  # If our example value matches the one of this child...
+      if example[node.get_name()]==children[child].label:
+	      # Recurse with that child
+          return evaluate(children[child], example)
 
   # If control flow gets here, we have a problem. No child matched example.
   # TODO: Do we need to handle this case? If so, it should go here. What should be done:
