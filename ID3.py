@@ -161,3 +161,7 @@ def evaluate(node, example):
   for child in node.get_children():
       if example[node.get_name()]==child.label: # If our example value matches the one of this child...
           return evaluate(child, example) # Recurse with that child
+  # If control flow gets here, we have a problem. No child matched example.
+  # TODO: Do we need to handle this case? If so, it should go here. What should be done:
+  # Go over the tree, and generate an associative array pairing possible classifications to number of appearances
+  # in our tree, and then return the one with greatest number of appearances.
