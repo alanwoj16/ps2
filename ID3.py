@@ -67,7 +67,27 @@ def mode(examples):
 
 
 def best_attribute(examples):
-    return "ba"
+    CombinedEntropyDict = {}
+    for x in range(0,len(examples[0])-1):
+        dataListAttribute = []
+        dataListClass = []
+        dataCounterClass = Counter()
+        EntropyDict = {}
+        for ex in examples:
+            dataListAttribute.append(ex.values()[x])
+            dataListClass.append(ex['Class'])
+        dataAttribute = Counter(dataListAttribute)
+        for d in data:
+            prob = 0
+            for num in dataListAttribute
+                if d == num:
+                    dataCounterClass.update(dataListClass[num])
+            for z in dataCounterClass:
+                prob += -((dataCounterClass[z]/sum(dataCounterClass.values()))*log(dataCounterClass[z]/sum(dataCounterClass.values()))
+                prob *= sum(dataCounterClass.values())/len(dataListClass)
+            EntropyDict.update(d,prob)
+        CombinedEntropyDict.update(x,sum(EntropyDict.values())
+   return min(CombinedEntropyDict,key=CombinedEntropyDict.get)
 
 
 def find_values(best, examples):
