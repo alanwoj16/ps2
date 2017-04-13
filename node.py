@@ -17,6 +17,13 @@ class Node:
       self.children[value] = node
       return self
 
+  def print_node(self):
+      print "Node label: ", self.label, " name ", self.name
+      print "Number of children: ", len(self.children)
+      for child in self.children:
+          child.print_node()
+      return self
+
 #test cases for add_child
 #node1 = Node()
 #node1.name = "PAtt"
