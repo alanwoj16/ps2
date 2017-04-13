@@ -162,7 +162,7 @@ def evaluate(node, example):
   children=node.get_children()
   for child in children:
 	  # If our example value matches the one of this child...
-      if example[node.get_name()]==children[child].label:
+      if example[node.get_name()]==child:
 	      # Recurse with that child
           return evaluate(children[child], example)
 
