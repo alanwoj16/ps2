@@ -12,7 +12,6 @@ from copy import deepcopy
 
 
 def ID3(examples, default):
-    missing_attributes(examples)
     node = Node()
     node.label = None
     if not examples:
