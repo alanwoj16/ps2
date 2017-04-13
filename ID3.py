@@ -155,7 +155,7 @@ def evaluate(node, example):
   Takes in a tree and one example.  Returns the Class value that the tree
   assigns to the example.
   '''
-  if node.get_children() == {}: # If the node has no children, we've reached the bottom of our tree
+  if len(node.get_children())==0: # If the node has no children, we've reached the bottom of our tree
       return node.get_label()
   # If the node has children, then find the one which matches our example data and evaluate using that node
   for child in node.get_children():
