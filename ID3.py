@@ -170,6 +170,14 @@ def test(node, examples):
     Takes in a trained tree and a test set of examples.  Returns the accuracy (fraction
     of examples the tree classifies correctly).
     '''
+    CorrectValue = 0
+    totalValue = 0
+    for ex in examples:
+            totalValue += 1
+            temp =  evaluate(node,ex)
+            if temp == ex['Class']:
+                CorrectValue +=1
+    return CorrectValue/totalValue
 
 
 def evaluate(node, example):
