@@ -164,7 +164,22 @@ def prune(node, examples):
     Takes in a trained tree and a validation set of examples.  Prunes nodes in order
     to improve accuracy on the validation data; the precise pruning strategy is up to you.
     '''
+        #get the Validation Accuracy
+                BaseValidAcc = test(node,examples)
+        #Check Pruning Node Result
+                temp = mode(examples)
+                sub_node = ID3(,temp)
+                #somehow run test on same tree with sub_node in place
+        #Compare Validation Accuracy
+                if ValidAcc >= BaseValidAcc :
+                        #If Equal or Better, Remove Node
+                        #Actual code here should take sub_node and replace the node with it 
+        #Otherwise, Don't Prune
+                        
+                #finally, some sort of recursion is likely needed to complete this for the tree
 
+
+    
 def test(node, examples):
     '''
     Takes in a trained tree and a test set of examples.  Returns the accuracy (fraction
