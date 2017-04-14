@@ -166,17 +166,21 @@ def prune(node, examples):
     '''
 	#get the Validation Accuracy
 	BaseValidAcc = test(node,examples)
-	#Check Pruning Node Result
-	temp = mode(examples)
-	sub_node = ID3(,temp)
-	#somehow run test on same tree with sub_node in place
-	#Compare Validation Accuracy
-	if ValidAcc >= BaseValidAcc :
-		#If Equal or Better, Remove Node
-		#Actual code here should take sub_node and replace the node with it
-	#Otherwise, Don't Prune
-
-	#finally, some sort of recursion is likely needed to complete this for the tree
+	BestAcc=BaseValidAcc
+	BestTree=node
+	nodes=[node]
+	while (len(nodes)!=0):
+		n=nodes.pop(0)
+		for (child in n.children):
+			nodes.append(n.children[child])
+			testTree=copy.deepcopy(node)
+			testTree.remove_descendant(n)
+			testAcc=test(testTree, examples)
+			if testAcc>BestAcc:
+				BestAcc=testAcc
+				BestTree=testTree
+	node=BestTree
+	return node
 
 def test(node, examples):
     '''
