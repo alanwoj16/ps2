@@ -116,7 +116,6 @@ assert ID3(data,0).label == 0
 data = [dict(b=1, Class='b'), dict(b=1, Class='a'), dict(b=1, Class='b'), dict(b=1, Class='a'), dict(b=1, Class='a')]
 assert ID3(data, 0).label == 'a'
 data = [dict(a=1, b=0, Class=0), dict(a=1, b=1, Class=1)]
-assert ID3(data, 0) == "hi"
 
 
 #test cases for check_homogenous_target

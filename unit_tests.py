@@ -91,8 +91,4 @@ def testPruningOnHouseData(inFile):
   print "average with pruning",sum(withPruning)/len(withPruning)," without: ",sum(withoutPruning)/len(withoutPruning)
 
 dict1 = parse("house_votes_84.data")
-
-print dict1
-
-ID3.missing_attributes(dict1)
-print dict1 #should be no ? marks
+testID3AndTest()
