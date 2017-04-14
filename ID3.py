@@ -77,7 +77,7 @@ def best_attribute(examples):
             dataListAttribute.append(ex.values()[x])
             dataListClass.append(ex['Class'])
         dataAttribute = Counter(dataListAttribute)
-        for d in data:
+        for d in dataAttribute:
             prob = 0
             for num in dataListAttribute
                 if d == num:
@@ -86,7 +86,7 @@ def best_attribute(examples):
                 prob += -((dataCounterClass[z]/sum(dataCounterClass.values()))*log(dataCounterClass[z]/sum(dataCounterClass.values()))
                 prob *= sum(dataCounterClass.values())/len(dataListClass)
             EntropyDict.update(d,prob)
-        CombinedEntropyDict.update(x,sum(EntropyDict.values())
+        CombinedEntropyDict.update(examples[x]=sum(EntropyDict.values()))
    return min(CombinedEntropyDict,key=CombinedEntropyDict.get)
 
 
