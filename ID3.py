@@ -85,8 +85,8 @@ def best_attribute(examples):
             for z in dataCounterClass:
                 prob += -((dataCounterClass[z]/sum(dataCounterClass.values()))*log(dataCounterClass[z]/sum(dataCounterClass.values()))
                 prob *= sum(dataCounterClass.values())/len(dataListClass)
-            EntropyDict.update(d,prob)
-        CombinedEntropyDict.update(examples[x]=sum(EntropyDict.values()))
+            EntropyDict.update({d:prob})
+        CombinedEntropyDict.update({examples[x]:sum(EntropyDict.values())})
    return min(CombinedEntropyDict,key=CombinedEntropyDict.get)
 
 
