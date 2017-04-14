@@ -77,12 +77,13 @@ def best_attribute(examples):
                         dataListClass.append(ex['Class'])
                 dataAttribute = Counter(dataListAttribute)
                 for d in dataAttribute:
-                        dataCounterClass = Counter()
+                        dataClassList = []
                         prob = 0
                         probtot = 0
                         for num in dataListAttribute:
                                 if d == num:
-                                        dataCounterClass.update({num : dataListClass[num]})
+                                        dataClassList.append(dataListClass[num])
+                        dataCounterClass = Counter(dataClassList)
                         for z in dataCounterClass:
                                 prob += -((dataCounterClass[z]/sum(dataCounterClass.values()))*math.log(dataCounterClass[z]/sum(dataCounterClass.values())))
                         probtot = prob*len(dataCounterClass)/len(dataListClass)
