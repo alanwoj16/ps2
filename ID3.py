@@ -1,108 +1,110 @@
+
 from node import Node
 import math
 from collections import Counter
 from copy import deepcopy
 
 '''
-  Takes in an array of examples, and returns a tree (an instance of Node)
-  trained on the examples.  Each example is a dictionary of attribute:value pairs,
-  and the target class variable is a special attribute with the name "Class".
-  Any missing attributes are denoted with a value of "?"
-  '''
+    Takes in an array of examples, and returns a tree (an instance of Node)
+    trained on the examples.  Each example is a dictionary of attribute:value pairs,
+    and the target class variable is a special attribute with the name "Class".
+    Any missing attributes are denoted with a value of "?"
+    '''
 
 
 def ID3(examples, default):
-    node = Node()
-    node.label = None
-    if not examples:
-        node.label = default
-        return node
-    elif check_homogenous_target(examples) != False:
-        node.label = check_homogenous_target(examples)
-        return node
-    elif check_homogenous_attributes(examples) == True:
-        node.label = mode(examples)
-        return node
-    else:
-        return "hi"
-        best = best_attribute(examples)
-        values = find_values(best, examples)
-        node.name = best
-        for val in values:
-            examples_sub = filter_ex(best, examples)
-            sub_node = ID3(examples_sub,mode(examples))
-            node.add_child(sub_node, val)
-        return node
+        node = Node()
+        node.label = None
+        if not examples:
+                node.label = default
+                return node
+        elif check_homogenous_target(examples) != False:
+                node.label = check_homogenous_target(examples)
+                return node
+        elif check_homogenous_attributes(examples) == True:
+                node.label = mode(examples)
+                return node
+        else:
+                best = best_attribute(examples)
+                values = find_values(best, examples)
+                node.name = best
+                for val in values:
+                        examples_sub = filter_ex(best, examples)
+                        sub_node = ID3(examples_sub,mode(examples))
+                        node.add_child(sub_node, val)
+                return node
 
 
 
 def check_homogenous_target(examples):
-    value = examples[0]['Class']
-    for ex in examples:
-        if ex['Class'] == value:
-            continue
-        else:
-            return False
-    return value
+        value = examples[0]['Class']
+        for ex in examples:
+                if ex['Class'] == value:
+                        continue
+                else:
+                        return False
+        return value
 
 
 def check_homogenous_attributes(examples):
-    for x in range(0,len(examples[0])-1):
-        test = examples[x].values()[x]
-        for ex in examples:
-            if test == ex.values()[x]:
-                continue
-            else:
-                return False
-    return True
+        for x in range(0,len(examples[0])-1):
+                test = examples[x].values()[x]
+                for ex in examples:
+                        if test == ex.values()[x]:
+                                continue
+                        else:
+                                return False
+        return True
 
 
 def mode(examples):
-    dataList = []
-    for ex in examples:
-        dataList.append(ex['Class'])
-    data = Counter(dataList)
-    mode = data.most_common(1)[0][0]
-    return mode
+        dataList = []
+        for ex in examples:
+                dataList.append(ex['Class'])
+        data = Counter(dataList)
+        mode = data.most_common(1)[0][0]
+        return mode
 
 
 def best_attribute(examples):
-    CombinedEntropyDict = {}
-    for x in range(0,len(examples[0])-1):
-        dataListAttribute = []
-        dataListClass = []
-        dataCounterClass = Counter()
-        EntropyDict = {}
-        for ex in examples:
-            dataListAttribute.append(ex.values()[x])
-            dataListClass.append(ex['Class'])
-        dataAttribute = Counter(dataListAttribute)
-        for d in dataAttribute:
-            prob = 0
-            for num in dataListAttribute
-                if d == num:
-                    dataCounterClass.update(dataListClass[num])
-            for z in dataCounterClass:
-                prob += -((dataCounterClass[z]/sum(dataCounterClass.values()))*log(dataCounterClass[z]/sum(dataCounterClass.values()))
-                prob *= sum(dataCounterClass.values())/len(dataListClass)
-            EntropyDict.update({d:prob})
-        CombinedEntropyDict.update({examples[x]:sum(EntropyDict.values())})
-   return min(CombinedEntropyDict,key=CombinedEntropyDict.get)
+        CombinedEntropyDict = {}
+        for x in range(0,len(examples[0])-1):
+                dataListAttribute = []
+                dataListClass = []
+                EntropyDict = {}
+                for ex in examples:
+                        dataListAttribute.append(ex.values()[x])
+                        dataListClass.append(ex['Class'])
+                dataAttribute = Counter(dataListAttribute)
+                for d in dataAttribute:
+                        dataCounterClass = Counter()
+                        prob = 0
+                        probtot = 0
+                        for num in dataListAttribute:
+                                if d == num:
+                                        dataCounterClass.update({num : dataListClass[num]})
+                        for z in dataCounterClass:
+                                prob += -((dataCounterClass[z]/sum(dataCounterClass.values()))*math.log(dataCounterClass[z]/sum(dataCounterClass.values())))
+                        probtot = prob*len(dataCounterClass)/len(dataListClass)
+                        EntropyDict.update({d:probtot})
+                temp = list(examples[x].keys())
+                CombinedEntropyDict.update({temp[x]:sum(EntropyDict.values())})
+                return min(CombinedEntropyDict,key=CombinedEntropyDict.get)
 
 
 def find_values(best, examples):
-    values = []
-    for ex in examples:
-        if ex[best] not in values:
-            values.append(ex[best])
-    return values
+        values = []
+        for ex in examples:
+                if ex[best] not in values:
+                        values.append(ex[best])
+        return values
 
 
 def filter_ex(best, examples):
-    examples_copy = deepcopy(examples)
-    for ex in examples_copy:
-        del ex[best]
-    return examples_copy
+        examples_copy = deepcopy(examples)
+        for ex in examples_copy:
+                del ex[best]
+        return examples_copy
 
 
 #test cases for ID3
@@ -158,21 +160,30 @@ assert filter_ex('a', data) == data2
 
 
 def prune(node, examples):
-  '''
-  Takes in a trained tree and a validation set of examples.  Prunes nodes in order
-  to improve accuracy on the validation data; the precise pruning strategy is up to you.
-  '''
+    '''
+    Takes in a trained tree and a validation set of examples.  Prunes nodes in order
+    to improve accuracy on the validation data; the precise pruning strategy is up to you.
+    '''
 
 def test(node, examples):
-  '''
-  Takes in a trained tree and a test set of examples.  Returns the accuracy (fraction
-  of examples the tree classifies correctly).
-  '''
+    '''
+    Takes in a trained tree and a test set of examples.  Returns the accuracy (fraction
+    of examples the tree classifies correctly).
+    '''
 
 
 def evaluate(node, example):
-  '''
-  Takes in a tree and one example.  Returns the Class value that the tree
-  assigns to the example.
-  '''
+    '''
+    Takes in a tree and one example.  Returns the Class value that the tree
+    assigns to the example.
+    '''
+    if len(node.get_children())==0: # If the node has no children, we've reached the bottom of our tree
+            return node.get_label()
 
+    # If the node has children, then find the one which matches our example data and evaluate using that node
+    children=node.get_children()
+    for child in children:
+     # If our example value matches the one of this child...
+            if example[node.get_name()]==child:
+            # Recurse with that child
+                    return evaluate(children[child], example)

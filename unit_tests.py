@@ -92,5 +92,7 @@ def testPruningOnHouseData(inFile):
 
 dict1 = parse("house_votes_84.data")
 
-ID3.ID3(dict1, 'republican')
-ID3.ID3([],'0')
+print dict1
+
+ID3.missing_attributes(dict1)
+print dict1 #should be no ? marks
