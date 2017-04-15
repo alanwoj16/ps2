@@ -51,7 +51,7 @@ def check_homogenous_target(examples):
 
 def check_homogenous_attributes(examples):
         for x in range(0,len(examples[0])-1):
-                test = examples[x].values()[x]
+                test = examples[0].values()[x]
                 for ex in examples:
                         if test == ex.values()[x]:
                                 continue
