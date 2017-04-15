@@ -192,7 +192,7 @@ def prune(node, examples):
     
     while True:
         lastAccuracy=test(node, examples)
-        if lastAccuracy-test(pruneOneNode(node, examples), examples)<=epsilon:
+        if test(pruneOneNode(node, examples), examples)-lastAccuracy<=epsilon:
             break
 
 def test(node, examples):
