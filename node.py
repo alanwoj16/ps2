@@ -31,7 +31,18 @@ class Node:
           print "Label: " + str(self.children[key].label)
           self.children[key].print_node()
 
-
+  def remove_descendant(self, node):
+   # First, search our direct children for the node
+      for child in self.children:
+          if self.children[child] == node:
+              self.children.pop(child)
+              return True
+              # The node is not one of our children. Ask each of them in turn to do it.
+      for child in self.children:
+          if self.children[child].remove_descendant(node):
+              return True
+              # The node was not found in our tree
+      return False
 
 
 
