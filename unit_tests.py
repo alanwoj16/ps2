@@ -1,6 +1,7 @@
 import ID3, parse, random
 from parse import parse
-
+import matplotlib.pyplot as plt
+import random
 
 def testID3AndEvaluate():
   data = [dict(a=1, b=0, Class=1), dict(a=1, b=1, Class=1)]
@@ -31,7 +32,7 @@ def testPruning():
 def testID3AndTest():
   trainData = [dict(a=1, b=0, c=0, Class=1), dict(a=1, b=1, c=0, Class=1),
   dict(a=0, b=0, c=0, Class=0), dict(a=0, b=1, c=0, Class=1)]
-  testData = [dict(a=1, b=0, c=1, Class=1), dict(a=1, b=1, c=1, Class=1), 
+  testData = [dict(a=1, b=0, c=1, Class=1), dict(a=1, b=1, c=1, Class=1),
   dict(a=0, b=0, c=1, Class=0), dict(a=0, b=1, c=1, Class=0)]
   tree = ID3.ID3(trainData, 0)
   fails = 0
@@ -65,7 +66,7 @@ def testPruningOnHouseData(inFile):
     train = data[:len(data)/2]
     valid = data[len(data)/2:3*len(data)/4]
     test = data[3*len(data)/4:]
-  
+
     tree = ID3.ID3(train, 'democrat')
     acc = ID3.test(tree, train)
     print "training accuracy: ",acc
@@ -73,7 +74,7 @@ def testPruningOnHouseData(inFile):
     print "validation accuracy: ",acc
     acc = ID3.test(tree, test)
     print "test accuracy: ",acc
-  
+
     ID3.prune(tree, valid)
     acc = ID3.test(tree, train)
     print "pruned tree train accuracy: ",acc
@@ -91,11 +92,34 @@ def testPruningOnHouseData(inFile):
   print "average with pruning",sum(withPruning)/len(withPruning)," without: ",sum(withoutPruning)/len(withoutPruning)
 
 #dict1 = parse("house_votes_84.data")
-#print dict1
+
 #ID3.missing_attributes(dict1)
-#print dict1 #should be no ? marks
+
+
+#ID3.ID3(dict1, "democrat")
 
 
 testID3AndEvaluate()
 testID3AndTest()
-testPruningOnHouseData("house_votes_84.data")
+
+testPruning()
+
+#testPruningOnHouseData("house_votes_84.data")
+
+#num_examples = [i for i in range(100)]
+#without_pruning = [random.random()*10 + 50 for i in range(100)]
+#with_pruning = [random.random()*10+70 for i in range(100)]
+
+#plt.title('Training curve with and without pruning')
+#plt.plot(num_examples, without_pruning, label="without pruning")
+#plt.xlabel('Number of training examples')
+#plt.plot(num_examples, with_pruning, label="with pruning")
+#plt.ylabel('Accuracy on testing set')
+#plt.legend()
+#plt.show()
+
+
+num_examples = [i*5 for i in range(1,61)]  #num_examples.length == 60
+print num_examples
+
+
