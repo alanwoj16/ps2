@@ -88,13 +88,16 @@ def check_homogenous_attributes(examples):
         return True
 
 
-def mode(examples):
-        dataList = []
-        for ex in examples:
-                dataList.append(ex['Class'])
-        data = Counter(dataList)
-        mode = data.most_common(1)[0][0]
-        return mode
+def mode(examples, a_name):
+    dataList = []
+    for ex in examples:
+        if ex[a_name] == '?':
+            continue
+        else:
+            dataList.append(ex[a_name])
+    data = Counter(dataList)
+    mode = data.most_common(1)[0][0]
+    return mode
 
 
 def best_attribute(examples):
@@ -286,11 +289,11 @@ def test(node, examples):
 #missing_attributes(data)
 #assert data == [dict(a=1, b=1, Class=1), dict(a=1, b=1, Class=1), dict(a=1, b=0, Class=1), dict(a=1, b=1, Class=1)]
 
+def test(node, examples):
     '''
     Takes in a trained tree and a test set of examples.  Returns the accuracy (fraction
     of examples the tree classifies correctly).
     '''
-def test(node, examples):
     CorrectValue = 0
     totalValue = 0
     for ex in examples:
@@ -300,11 +303,11 @@ def test(node, examples):
             CorrectValue +=1
     return float(CorrectValue)/float(totalValue)
 
-  '''
-  Takes in a tree and one example.  Returns the Class value that the tree
-  assigns to the example.
-  '''
 def evaluate(node, example):
+    '''
+    Takes in a tree and one example.  Returns the Class value that the tree
+    assigns to the example.
+    '''
     if len(node.get_children())==0: # If the node has no children, we've reached the bottom of our tree
         return node.get_label()
 
