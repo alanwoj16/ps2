@@ -164,36 +164,36 @@ def pruneOneNode(node, examples):
     Takes in a trained tree and a validation set of examples.  Prune one node in order
     to improve accuracy on the validation data; Which node is found by BFS
     '''
-	#get the Validation Accuracy
-	BaseValidAcc = test(node,examples)
-	BestAcc=BaseValidAcc
-	BestTree=node
-	nodes=[node]
-	while (len(nodes)!=0):
-		n=nodes.pop(0)
-		for (child in n.children):
-			nodes.append(n.children[child])
-			testTree=copy.deepcopy(node)
-			testTree.remove_descendant(n)
-			testAcc=test(testTree, examples)
-			if testAcc>BestAcc:
-				BestAcc=testAcc
-				BestTree=testTree
-	node=BestTree
-	return node
+    #get the Validation Accuracy
+    BaseValidAcc = test(node,examples)
+    BestAcc=BaseValidAcc
+    BestTree=node
+    nodes=[node]
+    while (len(nodes)!=0):
+        n=nodes.pop(0)
+        for child in n.children:
+            nodes.append(n.children[child])
+            testTree=deepcopy(node)
+            testTree.remove_descendant(n)
+            testAcc=test(testTree, examples)
+            if testAcc>BestAcc:
+                BestAcc=testAcc
+                BestTree=testTree
+    node=BestTree
+    return node
 	
 def prune(node, examples):
     '''
     Takes in a trained tree and a validation set of examples.  Prunes nodes in order
     to improve accuracy on the validation data; the precise pruning strategy is up to you.
     '''
-	epsilon=0 # Will stop attempting to improve when the difference in successive runs falls to or below this value
-	# AKA, higher epsilon sacrifices possible performance gains for decreased runtime
-	
-	while True:
-		lastAccuracy=test(node, examples)
-		if lastAccuracy-test(pruneOneNode(node, examples), examples)<=epsilon:
-			break
+    epsilon=0 # Will stop attempting to improve when the difference in successive runs falls to or below this value
+    # AKA, higher epsilon sacrifices possible performance gains for decreased runtime
+    
+    while True:
+        lastAccuracy=test(node, examples)
+        if lastAccuracy-test(pruneOneNode(node, examples), examples)<=epsilon:
+            break
 
 def test(node, examples):
     '''
