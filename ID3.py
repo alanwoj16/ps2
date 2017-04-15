@@ -39,34 +39,6 @@ def ID3(examples, default):
         return node
 
 
-def best_attribute(examples):
-    CombinedEntropyDict = {}
-    for x in range(0, len(examples[0]) - 1):
-        dataListAttribute = []
-        dataListClass = []
-        EntropyDict = {}
-        for ex in examples:
-            dataListAttribute.append(ex.values()[x])
-            dataListClass.append(ex['Class'])
-        dataAttribute = Counter(dataListAttribute)
-        for d in dataAttribute:
-            dataClassList = []
-            prob = 0
-            probtot = 0
-            for num in dataListAttribute:
-                if d == num:
-                    dataClassList.append(dataListClass[num])
-            dataCounterClass = Counter(dataClassList)
-            for z in dataCounterClass:
-                prob += -((dataCounterClass[z] / sum(dataCounterClass.values())) * math.log(
-                    dataCounterClass[z] / sum(dataCounterClass.values())))
-            probtot = prob * len(dataCounterClass) / len(dataListClass)
-            EntropyDict.update({d: probtot})
-        temp = list(examples[x].keys())
-        CombinedEntropyDict.update({temp[x]: sum(EntropyDict.values())})
-        return min(CombinedEntropyDict, key=CombinedEntropyDict.get)
-
-
 def check_homogenous_target(examples):
         value = examples[0]['Class']
         for ex in examples:
@@ -99,33 +71,64 @@ def mode(examples, a_name):
     mode = data.most_common(1)[0][0]
     return mode
 
+def entropy(examples):
+    '''
+    Calculates entropy of examples
+    '''
+
+    # Calculate the frequency of each value of Class
+    freq={}
+    for example in examples:
+        if freq.has_key(example['Class']):
+            freq[example['Class']]+=1.0
+        else:
+            freq[example['Class']]=1
+
+    # Now calculate entropy
+    out=0
+    for f in freq.values():
+        out+=(-f/len(examples)) * math.log(float(f)/len(examples), 2)
+
+    return out
+
+def infogain(examples, attr):
+    '''
+    Calculates the information gain resulting from splitting on attr
+    '''
+
+    # Calculate the frequency of each value of the attribute
+    freq={}
+    for example in examples:
+        if freq.has_key(example[attr]):
+            freq[example[attr]]+=1
+        else:
+            freq[example[attr]]=1
+
+    # Calculate weighted sum of entropy for each subset of examples
+    subsetEntropy=0
+    for value in freq.keys():
+        probability=freq[value]/sum(freq.values())
+
+        # Build a subset of data with this value
+        subset=[]
+        for example in examples:
+            if example[attr]==value:
+                subset.append(example)
+        subsetEntropy+=probability*entropy(subset)
+
+    # Now subtract the total entropy of this attribute from the entropy of the dataset
+    return entropy(examples)- subsetEntropy
 
 def best_attribute(examples):
-        CombinedEntropyDict = {}
-        for x in range(0,len(examples[0])-1):
-                dataListAttribute = []
-                dataListClass = []
-                EntropyDict = {}
-                for ex in examples:
-                        dataListAttribute.append(ex.values()[x])
-                        dataListClass.append(ex['Class'])
-                dataAttribute = Counter(dataListAttribute)
-                for d in dataAttribute:
-                        dataClassList = []
-                        prob = 0
-                        probtot = 0
-                        for num in dataListAttribute:
-                                if d == num:
-                                        dataClassList.append(dataListClass[num])
-                        dataCounterClass = Counter(dataClassList)
-                        for z in dataCounterClass:
-                                prob += -((dataCounterClass[z]/sum(dataCounterClass.values()))*math.log(dataCounterClass[z]/sum(dataCounterClass.values())))
-                        probtot = prob*len(dataCounterClass)/len(dataListClass)
-                        EntropyDict.update({d:probtot})
-                temp = list(examples[x].keys())
-                CombinedEntropyDict.update({temp[x]:sum(EntropyDict.values())})
-                return min(CombinedEntropyDict,key=CombinedEntropyDict.get)
-
+    attributes=examples[0].keys()
+    bestGain=0
+    bestAttr=None
+    for attribute in attributes:
+        gain=infogain(examples, attribute)
+        if gain>bestGain:
+            bestGain=gain
+            bestAttr=attribute
+    return bestAttr
 
 def find_values(best, examples):
         values = []
@@ -242,7 +245,7 @@ def pruneOneNode(node, examples):
                 BestTree=testTree
     node=BestTree
     return node
-	
+
 def prune(node, examples):
     '''
     Takes in a trained tree and a validation set of examples.  Prunes nodes in order
@@ -250,7 +253,7 @@ def prune(node, examples):
     '''
     epsilon=0 # Will stop attempting to improve when the difference in successive runs falls to or below this value
     # AKA, higher epsilon sacrifices possible performance gains for decreased runtime
-    
+
     while True:
         lastAccuracy=test(node, examples)
         if test(pruneOneNode(node, examples), examples)-lastAccuracy<=epsilon:
