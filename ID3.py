@@ -254,8 +254,9 @@ def prune(node, examples):
     Takes in a trained tree and a validation set of examples.  Prunes nodes in order
     to improve accuracy on the validation data; the precise pruning strategy is up to you.
     '''
-    epsilon=0 # Will stop attempting to improve when the difference in successive runs falls to or below this value
+    epsilon=0.01 # Will stop attempting to improve when the difference in successive runs falls to or below this value
     # AKA, higher epsilon sacrifices possible performance gains for decreased runtime
+    # Note that very low epsilons may overfit the data on which they prune
 
     while True:
         lastAccuracy=test(node, examples)
