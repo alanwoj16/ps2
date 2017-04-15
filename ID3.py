@@ -159,10 +159,10 @@ data2 = [dict(b=0, Class='a'), dict(b=2, Class='c'), dict(b=0, Class='a')]
 assert filter_ex('a', data) == data2
 
 
-def prune(node, examples):
+def pruneOneNode(node, examples):
     '''
-    Takes in a trained tree and a validation set of examples.  Prunes nodes in order
-    to improve accuracy on the validation data; the precise pruning strategy is up to you.
+    Takes in a trained tree and a validation set of examples.  Prune one node in order
+    to improve accuracy on the validation data; Which node is found by BFS
     '''
 	#get the Validation Accuracy
 	BaseValidAcc = test(node,examples)
@@ -181,6 +181,19 @@ def prune(node, examples):
 				BestTree=testTree
 	node=BestTree
 	return node
+	
+def prune(node, examples):
+    '''
+    Takes in a trained tree and a validation set of examples.  Prunes nodes in order
+    to improve accuracy on the validation data; the precise pruning strategy is up to you.
+    '''
+	epsilon=0 # Will stop attempting to improve when the difference in successive runs falls to or below this value
+	# AKA, higher epsilon sacrifices possible performance gains for decreased runtime
+	
+	while True:
+		lastAccuracy=test(node, examples)
+		if lastAccuracy-test(pruneOneNode(node, examples), examples)<=epsilon:
+			break
 
 def test(node, examples):
     '''
