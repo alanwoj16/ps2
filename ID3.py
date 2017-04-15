@@ -1,14 +1,15 @@
+
 from node import Node
 import math
 from collections import Counter
 from copy import deepcopy
 
 '''
-  Takes in an array of examples, and returns a tree (an instance of Node)
-  trained on the examples.  Each example is a dictionary of attribute:value pairs,
-  and the target class variable is a special attribute with the name "Class".
-  Any missing attributes are denoted with a value of "?"
-  '''
+    Takes in an array of examples, and returns a tree (an instance of Node)
+    trained on the examples.  Each example is a dictionary of attribute:value pairs,
+    and the target class variable is a special attribute with the name "Class".
+    Any missing attributes are denoted with a value of "?"
+    '''
 
 
 def ID3(examples, default):
@@ -38,8 +39,40 @@ def ID3_Helper(examples, default):
             no_best = remove_best(best, examples_filt) #filters out examples with attribute best
             sub_node = ID3_Helper(no_best,mode(examples, "Class"))
             node.add_child(sub_node, val)
-        return node
+        return node    
 
+
+def check_homogenous_target(examples):
+        value = examples[0]['Class']
+        for ex in examples:
+                if ex['Class'] == value:
+                        continue
+                else:
+                        return False
+        return value
+
+
+def check_homogenous_attributes(examples):
+        for x in range(0,len(examples[0])-1):
+                test = examples[0].values()[x]
+                for ex in examples:
+                        if test == ex.values()[x]:
+                                continue
+                        else:
+                                return False
+        return True
+
+
+def mode(examples, a_name):
+    dataList = []
+    for ex in examples:
+        if ex[a_name] == '?':
+            continue
+        else:
+            dataList.append(ex[a_name])
+    data = Counter(dataList)
+    mode = data.most_common(1)[0][0]
+    return mode
 
 def entropy(examples):
     '''
@@ -100,46 +133,12 @@ def best_attribute(examples):
             bestAttr=attribute
     return bestAttr
 
-
-def check_homogenous_target(examples):
-    value = examples[0]['Class']
-    for ex in examples:
-        if ex['Class'] == value:
-            continue
-        else:
-            return False
-    return value
-
-
-def check_homogenous_attributes(examples):
-    for x in range(0,len(examples[0])-1):
-        test = examples[0].values()[x]
-        for ex in examples:
-            if test == ex.values()[x]:
-                continue
-            else:
-                return False
-    return True
-
-
-def mode(examples, a_name):
-    dataList = []
-    for ex in examples:
-        if ex[a_name] == '?':
-            continue
-        else:
-            dataList.append(ex[a_name])
-    data = Counter(dataList)
-    mode = data.most_common(1)[0][0]
-    return mode
-
-
 def find_values(best, examples):
-    values = []
-    for ex in examples:
-        if ex[best] not in values:
-            values.append(ex[best])
-    return values
+        values = []
+        for ex in examples:
+                if ex[best] not in values:
+                        values.append(ex[best])
+        return values
 
 
 def filter_ex(val, best, examples):
@@ -227,31 +226,6 @@ def get_attribute_names(examples):
 #data2 = [dict(b=0, Class='a'), dict(b=2, Class='c'), dict(b=0, Class='a')]
 #assert filter_ex('a', data) == data2
 
-#test cases for missing attributes
-#data1 = [dict(a=1, b='?', Class='a'), dict(a=1, b=2, Class='c'), dict(a=1, b=0, Class='a'), dict(a=1, b=0, Class='a'),
-        #dict(a=1, b=2, Class='a'), dict(a=1,b=2, Class='c')]
-
-#test cases for get_attribute_names:
-#data = [dict(a=1, b=0, Class=1), dict(a=1, b=1, Class=1)]
-#assert get_attribute_names(data) == ['a','b']
-#data = [dict(a=1, b=0), dict(a=1, b=1)]
-#assert get_attribute_names(data) == ['a','b']
-
-
-#test cases for missing attributes
-#data = [dict(a=1, b='?', Class=1), dict(a=1, b=1, Class=1), dict(a=1, b=0, Class=1), dict(a=1, b=1, Class=1)]
-#missing_attributes(data)
-#assert data == [dict(a=1, b=1, Class=1), dict(a=1, b=1, Class=1), dict(a=1, b=0, Class=1), dict(a=1, b=1, Class=1)]
-#data = [dict(a=1, b=1, Class=1), dict(a='?', b=1, Class=1), dict(a='?', b=0, Class=1), dict(a='?', b=1, Class=1)]
-#missing_attributes(data)
-#assert data == [dict(a=1, b=1, Class=1), dict(a=1, b=1, Class=1), dict(a=1, b=0, Class=1), dict(a=1, b=1, Class=1)]
-
-'''
-  Takes in a trained tree and a validation set of examples.  Prunes nodes in order
-  to improve accuracy on the validation data; the precise pruning strategy is up to you.
-  '''
-
-
 def pruneOneNode(node, examples):
     '''
     Takes in a trained tree and a validation set of examples.  Prune one node in order
@@ -289,13 +263,44 @@ def prune(node, examples):
         if test(pruneOneNode(node, examples), examples)-lastAccuracy<=epsilon:
             break
 
-'''
+def test(node, examples):
+    '''
     Takes in a trained tree and a test set of examples.  Returns the accuracy (fraction
     of examples the tree classifies correctly).
     '''
+    CorrectValue = 0
+    totalValue = 0
+    for ex in examples:
+            totalValue += 1
+            temp =  evaluate(node,ex)
+            if temp == ex['Class']:
+                CorrectValue +=1
+    return CorrectValue/totalValue
 
+#test cases for missing attributes
+#data1 = [dict(a=1, b='?', Class='a'), dict(a=1, b=2, Class='c'), dict(a=1, b=0, Class='a'), dict(a=1, b=0, Class='a'),
+        #dict(a=1, b=2, Class='a'), dict(a=1,b=2, Class='c')]
+
+#test cases for get_attribute_names:
+#data = [dict(a=1, b=0, Class=1), dict(a=1, b=1, Class=1)]
+#assert get_attribute_names(data) == ['a','b']
+#data = [dict(a=1, b=0), dict(a=1, b=1)]
+#assert get_attribute_names(data) == ['a','b']
+
+
+#test cases for missing attributes
+#data = [dict(a=1, b='?', Class=1), dict(a=1, b=1, Class=1), dict(a=1, b=0, Class=1), dict(a=1, b=1, Class=1)]
+#missing_attributes(data)
+#assert data == [dict(a=1, b=1, Class=1), dict(a=1, b=1, Class=1), dict(a=1, b=0, Class=1), dict(a=1, b=1, Class=1)]
+#data = [dict(a=1, b=1, Class=1), dict(a='?', b=1, Class=1), dict(a='?', b=0, Class=1), dict(a='?', b=1, Class=1)]
+#missing_attributes(data)
+#assert data == [dict(a=1, b=1, Class=1), dict(a=1, b=1, Class=1), dict(a=1, b=0, Class=1), dict(a=1, b=1, Class=1)]
 
 def test(node, examples):
+    '''
+    Takes in a trained tree and a test set of examples.  Returns the accuracy (fraction
+    of examples the tree classifies correctly).
+    '''
     CorrectValue = 0
     totalValue = 0
     for ex in examples:
@@ -305,13 +310,11 @@ def test(node, examples):
             CorrectValue +=1
     return float(CorrectValue)/float(totalValue)
 
-'''
-  Takes in a tree and one example.  Returns the Class value that the tree
-  assigns to the example.
-  '''
-
-
 def evaluate(node, example):
+    '''
+    Takes in a tree and one example.  Returns the Class value that the tree
+    assigns to the example.
+    '''
     if len(node.get_children())==0: # If the node has no children, we've reached the bottom of our tree
         return node.get_label()
 
