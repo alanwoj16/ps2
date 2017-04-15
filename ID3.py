@@ -14,7 +14,7 @@ from copy import deepcopy
 
 def ID3(examples, default):
     missing_attributes(examples)
-    ID3_Helper(examples, default)
+    return ID3_Helper(examples, default)
 
 def ID3_Helper(examples, default):
     node = Node()
