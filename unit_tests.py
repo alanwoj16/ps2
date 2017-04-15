@@ -29,7 +29,7 @@ def testPruning():
     print "pruning test failed -- no tree returned."
 
 def testID3AndTest():
-  trainData = [dict(a=1, b=0, c=0, Class=1), dict(a=1, b=1, c=0, Class=1), 
+  trainData = [dict(a=1, b=0, c=0, Class=1), dict(a=1, b=1, c=0, Class=1),
   dict(a=0, b=0, c=0, Class=0), dict(a=0, b=1, c=0, Class=1)]
   testData = [dict(a=1, b=0, c=1, Class=1), dict(a=1, b=1, c=1, Class=1), 
   dict(a=0, b=0, c=1, Class=0), dict(a=0, b=1, c=1, Class=0)]
@@ -90,5 +90,11 @@ def testPruningOnHouseData(inFile):
   print withoutPruning
   print "average with pruning",sum(withPruning)/len(withPruning)," without: ",sum(withoutPruning)/len(withoutPruning)
 
-dict1 = parse("house_votes_84.data")
+#dict1 = parse("house_votes_84.data")
+#print dict1
+#ID3.missing_attributes(dict1)
+#print dict1 #should be no ? marks
+
+
+testID3AndEvaluate()
 testID3AndTest()
