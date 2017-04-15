@@ -13,7 +13,10 @@ from copy import deepcopy
 
 
 def ID3(examples, default):
-    #missing_attributes(examples) might need to add this to remove ? marks
+    missing_attributes(examples)
+    ID3_Helper(examples, default)
+
+def ID3_Helper(examples, default):
     node = Node()
     node.label = None
     if not examples:
@@ -34,9 +37,9 @@ def ID3(examples, default):
         for val in values:
             examples_filt = filter_ex(val, best, examples) #filters out examples which are not equal to val
             no_best = remove_best(best, examples_filt) #filters out examples with attribute best
-            sub_node = ID3(no_best,mode(examples, "Class"))
+            sub_node = ID3_Helper(no_best,mode(examples, "Class"))
             node.add_child(sub_node, val)
-        return node
+        return node    
 
 
 def check_homogenous_target(examples):
