@@ -59,7 +59,7 @@ def testID3AndTest():
 def testPruningOnHouseData(inFile):
   withPruning = []
   withoutPruning = []
-  data = parse.parse(inFile)
+  data = parse(inFile)
   for i in range(100):
     random.shuffle(data)
     train = data[:len(data)/2]
@@ -98,3 +98,4 @@ def testPruningOnHouseData(inFile):
 
 testID3AndEvaluate()
 testID3AndTest()
+testPruningOnHouseData("house_votes_84.data")
